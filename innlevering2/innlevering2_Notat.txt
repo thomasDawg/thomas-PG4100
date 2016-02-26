@@ -1,0 +1,44 @@
+﻿Et kortfattet notat der du beskriver:
+	a) Eventuelle forutsetninger for å kunne teste løsningen.
+		Bruke SQL script for og oprette databasen.
+		En ConnectToDB klasse for database oppkobling.
+	b) Kommentarer til eget resultat. Kunne noe vært gjort bedre?
+
+	  + Har prøvd å delt opp i klasser som gjør relaterte oppgaver.
+	  +	Engelsk navngiving på alt.
+	  + MetodeNavn og variabler skal være lette for en person som ikke har jobbet med koden å forstå
+	  + har prøvd å hold klassene slikt at de har metoder som ikke skal være altfor mye kode i seg.
+	  + Det fungerer å starte serveren og koble til flere klienter.
+	  + ForfatterQuizen fungerer.
+	  + Skal ikke være mye jobb å legge til feks andre typer spørsmål, bla hvilke år en forfatter ga ut boken    
+	    eller hvor mange sider boken har.
+	  + GUI for klientene, er ikke den peneste men den er informativ og funker.
+	  + har laget SQL script.
+
+
+	  - Mangler tester
+	  - Klarte ikke helt å fikse slik at input fra bruker er helt korrekt.
+	  - Bedre dokumentasjon er noe jeg også vil få frem til neste gang.
+	  - hadde sikkert egnet seg bedre med newCachedThreadPool siden vi ikke har noe max antall tråder som 
+	  	skal kunne kjøre på serveren.
+
+	c) Eventuelle spørsmål du trenger svar på for å komme videre.
+	   
+-----------------------------------------------------------------------------------------------------------------
+Oppgave 4, B)
+
+I Server klassen blir det satt opp en Main Thread, denne skal kjøre kjøre på port 8882.
+Inne i while true loopen kalles det på Socket socket = serverSocket.accept();. Her sier serveren i fra om at den vil ta i mot alle sockets som spør etter port 8882.
+For hver klient som kontakter serveren vil det bli opprettet en ny tråd som oppretter en ny Runnable instanse av klassen Quiz. Denne quiz klassen vil så starte en dialog med klienten.
+
+Når en klient(socket) kontakter serveren sin 8882 port vil servern opprette en ny Thread med kommandoen 
+new Thread(new Quiz(socket)).start();
+Tråden starter opp og setter opp input og outputStreams, slik at den er klar til å sende og motta meldinger fra klienten. Så vil tråden ta kontakt med en quizMaker klasse, denne har som oppgave å lage spørsmål og svar til quiz klassen. QuizMaker tar kontakt med en ny klasse som er kalt dbHandlerBokliste, denne klassen kontakter databasen ved hjelp fra ConnectToDB klassen og returnerer en liste med Book objekter som blir brukt til å lage spørsmål og svar i quizMaker.
+
+Quizmakeren sender så quiz klassen et par forfatter spørsmål og svar som quiz klassen bruker til å spørre klienten om han vet svaret på eller ikke. Tråden(Quiz) vil leve så lenge klienten sier til quiz klassen at den vil spille mer, dersom klienten sier nei når quiz klassen spør om han/hun vil spille mer blir endQuiz kalt på, denne metoden lukker forbindelsen med serveren og klienten og closer in/outputStreams og klienten har ikke lengre mulighet til å snakke med server.
+
+
+
+
+					
+
